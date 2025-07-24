@@ -2,23 +2,22 @@ package com.aherrera.gameloft.profile_matcher.domain;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.aherrera.gameloft.profile_matcher.utils.InventoryToMapConverter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Entity(name = "player_profile")
@@ -51,7 +50,6 @@ public class PlayerProfile implements Serializable {
     @JsonProperty("last_purchase")
     private OffsetDateTime lastPurchase;
 
-    
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "player_profile_id")
     private Set<Campaign> activeCampaigns;
@@ -76,10 +74,14 @@ public class PlayerProfile implements Serializable {
 
     private String gender;
 
-    //I don't consider Inventory has enough weigh to become an entity on its own.
-    // Embedded to reduce joins
-    @Embedded 
-    private Inventory inventory;
+    /**
+     *  I assume the inventory is a MAP, where the key is the name of the item, and the value is the numeric stock value.
+     *  As I'm using SQL, I'm gonna save it into a TEXT column, and then, when serializing to JAVA object, I'm converting it into a map.
+     */
+    @JsonProperty("inventory")
+    @Convert(converter = InventoryToMapConverter.class)
+    @Column(name = "inventory", columnDefinition = "TEXT")
+    private Map<String, Integer> inventory;
 
     @OneToOne
     private Clan clan;
@@ -87,19 +89,4 @@ public class PlayerProfile implements Serializable {
     @Column(name = "custom_field")
     @JsonProperty("_customfield")
     private String customField;
-
-
-    @Embeddable
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Inventory {
-
-            private Integer cash;
-            private Integer coins;
-            private Integer item_1;
-            private Integer item_34;
-            private Integer item_55;
-
-    }
 }

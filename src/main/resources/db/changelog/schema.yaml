@@ -123,24 +123,11 @@ databaseChangeLog:
               - column:
                   name: last_purchase
                   type: TIMESTAMP
-
-              # Embedded Inventory fields - columns directly in player_profile table
               - column:
-                  name: cash
-                  type: INT
-              - column:
-                  name: coins
-                  type: INT
-              - column:
-                  name: item_1 # Maps from item_1 in Inventory
-                  type: INT
-              - column:
-                  name: item_34 # Maps from item_34 in Inventory
-                  type: INT
-              - column:
-                  name: item_55 # Maps from item_55 in Inventory
-                  type: INT
-
+                  name: inventory
+                  type: TEXT
+                  constraints:
+                    nullable: true
               - column:
                   name: level
                   type: INT

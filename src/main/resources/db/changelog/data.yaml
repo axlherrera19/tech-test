@@ -67,7 +67,7 @@ databaseChangeLog:
 
   - changeSet:
       id: insert-player-profile-data-1
-      author: your-name
+      author: aherrera
       changes:
         - preConditions:
             - onFail: MARK_RAN
@@ -145,21 +145,16 @@ databaseChangeLog:
               - column:
                   name: gender
                   value: "male"
+            # Inventory will be saved into DB as a JSON, but it will be converted to a Map when serializing
               - column:
-                  name: cash
-                  value: 123
+                  name: inventory
+                  value: '{"cash": 123, "coins": 123, "item_1": 1, "item_34": 3, "item_55": 2}'
               - column:
-                  name: coins
-                  value: 123
+                  name: clan_id
+                  value: "123456"
               - column:
-                  name: item_1
-                  value: 1
-              - column:
-                  name: item_34
-                  value: 3
-              - column:
-                  name: item_55
-                  value: 2
+                  name: custom_field
+                  value: "mycustom"
               - column:
                   name: clan_id
                   value: "123456" # References the Clan ID inserted above
