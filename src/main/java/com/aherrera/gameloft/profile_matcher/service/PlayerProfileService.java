@@ -18,11 +18,20 @@ public class PlayerProfileService {
     @Autowired
     private PlayerProfileRepository playerProfileRepository;
 
-    public PlayerProfile getClientConfigById(UUID playerId) {
+    @Autowired
+    private CampaignService campaignService;
+
+    public PlayerProfile getClientConfigById(String playerId) {
         PlayerProfile result = null;
-        Optional<PlayerProfile> playerProfileOpt = playerProfileRepository.findById(playerId);
-        if (playerProfileOpt.isPresent()) {
-            result = playerProfileOpt.get();
+        if (playerId != null && UUID.fromString(playerId) != null) {
+            Optional<PlayerProfile> playerProfileOpt = playerProfileRepository.findById(UUID.fromString(playerId));
+            if (playerProfileOpt.isPresent()) {
+                result = playerProfileOpt.get();
+                campaignService.getRunningCampaigns().forEach(runningCampaign -> {
+                    //El algoritmo aqui
+                    runningCampaign.getMatchers().getHas().getCountry()
+                });
+            }
         }
 
         return result;

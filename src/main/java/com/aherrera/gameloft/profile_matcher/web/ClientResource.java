@@ -1,7 +1,5 @@
 package com.aherrera.gameloft.profile_matcher.web;
 
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +18,11 @@ public class ClientResource {
     private PlayerProfileService playerProfileService;
 
     @GetMapping("/get_client_config/{player_id}")
-    public ResponseEntity<PlayerProfile> getClientConfig(@PathVariable UUID playerId) {
-        return ResponseEntity.ok(playerProfileService.getClientConfigById(playerId));
+    public ResponseEntity<PlayerProfile> getClientConfig(@PathVariable(name = "player_id", required = true) String playerId) {
+        PlayerProfile result = playerProfileService.getClientConfigById(playerId);
+        if(result != null)
+            return ResponseEntity.ok(result);
+        else
+            return ResponseEntity.notFound().build();  
     }
 }

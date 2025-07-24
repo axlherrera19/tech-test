@@ -1,0 +1,188 @@
+databaseChangeLog:
+  - changeSet:
+      ## Insert Campaign and Matcher data
+      id: insert-initial-campaign-data-1
+      author: aherrera # Replace with your name or identifier
+      changes:
+        - preConditions:
+            - onFail: MARK_RAN
+            - tableExists:
+                tableName: matcher
+            - tableExists:
+                tableName: campaign
+
+        - insert:
+            tableName: matcher
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: min
+                  value: 1
+              - column:
+                  name: max
+                  value: 3
+              - column:
+                  name: country
+                  value: "US,RO,CA"
+              - column:
+                  name: has_items
+                  value: "item_1"
+              - column:
+                  name: does_not_have_items
+                  value: "item_4"
+
+        # Now, insert the Campaign data, linking it to the Matcher
+        - insert:
+            tableName: campaign
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: game
+                  value: "mygame"
+              - column:
+                  name: name
+                  value: "mycampaign"
+              - column:
+                  name: priority
+                  valueNumeric: 10.5
+              - column:
+                  name: matcher_id 
+                  valueNumeric: 1
+              - column:
+                  name: start_date
+                  value: "2022-01-25T00:00:00Z"
+              - column:
+                  name: end_date
+                  value: "2022-02-25T00:00:00Z"
+              - column:
+                  name: enabled
+                  valueBoolean: true
+              - column:
+                  name: last_updated
+                  value: "2021-07-13T11:46:58Z"
+
+  - changeSet:
+      id: insert-player-profile-data-1
+      author: your-name
+      changes:
+        - preConditions:
+            - onFail: MARK_RAN
+            - tableExists:
+                tableName: player_profile
+            - tableExists:
+                tableName: device
+            - tableExists:
+                tableName: clan
+            - columnExists:
+                tableName: campaign
+                columnName: player_profile_id
+
+        - insert:
+        # Insert data in Clan
+            tableName: clan
+            columns:
+              - column:
+                  name: id
+                  value: "123456"
+              - column:
+                  name: name
+                  value: "Hello world clan"
+
+        
+        - insert:
+            # Insert PlayerProfile
+            tableName: player_profile
+            columns:
+              - column:
+                  name: player_id
+                  value: "97983be2-98b7-11e7-90cf-082e5f28d836"
+              - column:
+                  name: credential
+                  value: "apple_credential"
+              - column:
+                  name: created_at
+                  value: "2021-01-10 13:37:17Z"
+              - column:
+                  name: modified_at
+                  value: "2021-01-23 13:37:17Z"
+              - column:
+                  name: last_session
+                  value: "2021-01-23 13:37:17Z"
+              - column:
+                  name: total_spent
+                  value: 400.0 # Use decimal for double
+              - column:
+                  name: total_refund
+                  value: 0.0 # Use decimal for double
+              - column:
+                  name: total_transactions
+                  value: 5
+              - column:
+                  name: last_purchase
+                  value: "2021-01-22 13:37:17Z"
+              - column:
+                  name: level
+                  value: 3
+              - column:
+                  name: xp
+                  value: 1000
+              - column:
+                  name: total_playtime
+                  value: 144
+              - column:
+                  name: country
+                  value: "CA"
+              - column:
+                  name: language
+                  value: "fr"
+              - column:
+                  name: birth_date
+                  value: "2000-01-10 13:37:17Z"
+              - column:
+                  name: gender
+                  value: "male"
+              - column:
+                  name: cash
+                  value: 123
+              - column:
+                  name: coins
+                  value: 123
+              - column:
+                  name: item_1
+                  value: 1
+              - column:
+                  name: item_34
+                  value: 3
+              - column:
+                  name: item_55
+                  value: 2
+              - column:
+                  name: clan_id
+                  value: "123456" # References the Clan ID inserted above
+              - column:
+                  name: custom_field
+                  value: "mycustom"
+
+        - insert:
+         ## Insert Device
+            tableName: device
+            columns:
+              - column:
+                  name: id
+                  value: 1 # Device ID
+              - column:
+                  name: model
+                  value: "apple iphone 11"
+              - column:
+                  name: carrier
+                  value: "vodafone"
+              - column:
+                  name: firmware
+                  value: "123"
+              - column:
+                  name: player_id
+                  value: "97983be2-98b7-11e7-90cf-082e5f28d836"

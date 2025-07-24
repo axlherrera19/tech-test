@@ -2,14 +2,23 @@ package com.aherrera.gameloft.profile_matcher.domain;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity(name = "player_profile")
@@ -42,14 +51,14 @@ public class PlayerProfile implements Serializable {
     @JsonProperty("last_purchase")
     private OffsetDateTime lastPurchase;
 
-    // @ElementCollection // For collections of basic types or embeddables
-    // @CollectionTable(name = "player_active_campaigns", joinColumns = @JoinColumn(name = "player_id"))
-    // @Column(name = "campaign_name")
-    // private List<String> activeCampaigns;
+    
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "player_profile_id")
+    private Set<Campaign> activeCampaigns;
 
-    // @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) // One player has many devices
-    // @JoinColumn(name = "player_id") // Foreign key in the device table
-    // private List<Device> devices;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "player_id")
+    private Set<Device> devices;
 
     private Integer level;
 
@@ -67,13 +76,30 @@ public class PlayerProfile implements Serializable {
 
     private String gender;
 
-    // @Embedded // Embeds the Inventory object directly into the PlayerProfile table
-    // private Inventory inventory;
+    //I don't consider Inventory has enough weigh to become an entity on its own.
+    // Embedded to reduce joins
+    @Embedded 
+    private Inventory inventory;
 
-    // @Embedded // Embeds the Clan object directly into the PlayerProfile table
-    // private Clan clan;
+    @OneToOne
+    private Clan clan;
 
-    @Column(name = "custom_field") // Maps "_customfield" to "custom_field" in DB
+    @Column(name = "custom_field")
     @JsonProperty("_customfield")
     private String customField;
+
+
+    @Embeddable
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Inventory {
+
+            private Integer cash;
+            private Integer coins;
+            private Integer item_1;
+            private Integer item_34;
+            private Integer item_55;
+
+    }
 }
