@@ -24,6 +24,8 @@ databaseChangeLog:
               - column:
                   name: country
                   type: VARCHAR(255)
+                  constraints:
+                    nullable: true
               - column:
                   name: has_items
                   type: VARCHAR(255)

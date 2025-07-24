@@ -2,9 +2,11 @@ package com.aherrera.gameloft.profile_matcher.domain;
 
 import java.util.List;
 
+import com.aherrera.gameloft.profile_matcher.utils.StringToListConverter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -55,10 +57,12 @@ public class Matcher {
     @AllArgsConstructor
     public static class Has {
 
+        @Convert(converter = StringToListConverter.class)
         private List<String> country;
 
         @Column(name = "has_items")
         private List<String> items;
+
     }
 
     @Embeddable
@@ -67,7 +71,7 @@ public class Matcher {
     @AllArgsConstructor
     public static class DoesNotHave {
 
-        // Avoid duplicated columns (items) in same entity 
+        // Avoid duplicated columns (items) in same entity
         @Column(name = "does_not_have_items")
         private List<String> items;
     }
