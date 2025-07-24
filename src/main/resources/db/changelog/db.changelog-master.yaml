@@ -1,0 +1,153 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: create-matcher-table-1
+      author: aherrera
+      changes:
+        ## Create Matcher table
+        - createTable:
+            tableName: matcher
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: min
+                  type: INT
+              - column:
+                  name: max
+                  type: INT
+              - column:
+                  name: country
+                  type: VARCHAR(255)
+              - column:
+                  name: has_items
+                  type: VARCHAR(255)
+              - column:
+                  name: does_not_have_items 
+                  type: VARCHAR(255)
+
+  - changeSet:
+      ## Create Matcher table
+      id: create-campaign-table-1
+      author: aherrera
+      changes:
+        - createTable:
+            tableName: campaign
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: game
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: priority
+                  type: DOUBLE
+              - column:
+                  ## FK with Matcher
+                  name: matcher_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_date
+                  type: TIMESTAMP 
+              - column:
+                  name: end_date
+                  type: TIMESTAMP 
+              - column:
+                  name: enabled
+                  type: BOOLEAN
+              - column:
+                  name: last_updated
+                  type: TIMESTAMP 
+
+        - addForeignKeyConstraint:
+            baseTableName: campaign
+            baseColumnNames: matcher_id
+            referencedTableName: matcher
+            referencedColumnNames: id
+            constraintName: fk_campaign_matcher
+            onDelete: SET NULL
+
+  - changeSet:
+      ## Insert Campaign and Matcher data
+      id: insert-initial-campaign-data-1
+      author: aherrera # Replace with your name or identifier
+      changes:
+        - preConditions:
+            - onFail: MARK_RAN
+            - tableExists:
+                tableName: matcher
+            - tableExists:
+                tableName: campaign
+
+        - insert:
+            tableName: matcher
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: min
+                  value: 1
+              - column:
+                  name: max
+                  value: 3
+              - column:
+                  name: country
+                  value: "US,RO,CA"
+              - column:
+                  name: has_items
+                  value: "item_1"
+              - column:
+                  name: does_not_have_items
+                  value: "item_4"
+
+        # Now, insert the Campaign data, linking it to the Matcher
+        - insert:
+            tableName: campaign
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 1
+              - column:
+                  name: game
+                  value: "mygame"
+              - column:
+                  name: name
+                  value: "mycampaign"
+              - column:
+                  name: priority
+                  valueNumeric: 10.5
+              - column:
+                  name: matcher_id 
+                  valueNumeric: 1
+              - column:
+                  name: start_date
+                  value: "2022-01-25T00:00:00Z"
+              - column:
+                  name: end_date
+                  value: "2022-02-25T00:00:00Z"
+              - column:
+                  name: enabled
+                  valueBoolean: true
+              - column:
+                  name: last_updated
+                  value: "2021-07-13T11:46:58Z"

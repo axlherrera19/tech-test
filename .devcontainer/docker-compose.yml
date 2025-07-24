@@ -1,0 +1,46 @@
+services:
+  
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+
+    volumes:
+      # Forwards the local Docker socket to the container.
+      - /var/run/docker.sock:/var/run/docker-host.sock 
+
+      # Update this to wherever you want VS Code to mount the folder of your project
+      - ..:/workspace:cached
+
+      # Persist Dapr runtime & components across rebuilds
+      # - ../.docker_data/dapr:/home/vscode/.dapr:cached
+
+      - ./lifecycle:/opt/devcontainer/init
+      # - /home/devcontainer/m2:/opt/devcontainer/m2
+      - /home/devcontainer/m2:/home/vscode/.m2
+    networks:
+      - backend-network
+    container_name: profile-matcher-container
+    ports:
+      - 8080:8080
+    command: 
+      - /bin/bash
+      - -c
+      - |
+          whoami
+          mkdir -pv /opt/devcontainer/init || true
+          ls -la /opt/devcontainer/
+          ls -la /opt/devcontainer/init/
+          sudo chmod -v +x /opt/devcontainer/init/*
+          ls -la /opt/devcontainer/init/
+          mkdir -pv /opt/devcontainer/m2 || true
+          sudo chmod -v +x /opt/devcontainer/m2/*
+          ls -la /opt/devcontainer/m2
+          mkdir -pv /home/vscode/.m2 || true
+          sudo chmod -v +x /home/vscode/.m2/*
+          sleep infinity
+    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+
+networks:
+  backend-network:

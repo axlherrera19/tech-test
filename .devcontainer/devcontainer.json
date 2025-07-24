@@ -1,0 +1,164 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/java
+{
+  "name": "Profile Matcher Dev Container",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  // "image": "mcr.microsoft.com/devcontainers/java:1-21-bookworm",
+  // Update the 'dockerComposeFile' list if you have more compose files or use different names.
+  "dockerComposeFile": "docker-compose.yml",
+  // The 'service' property is the name of the service for the container that VS Code should
+  // use. Update this value and .devcontainer/docker-compose.yml to the real service name.
+  "service": "app",
+
+  // The 'workspaceFolder' property is the path VS Code should open by default when
+  // connected. Corresponds to a volume mount in .devcontainer/docker-compose.yml
+  "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=${localWorkspaceFolder}/.devcontainer/lifecycle,target=/opt/devcontainer/init,type=bind",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/root/.ssh,readonly,type=bind",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,readonly,type=bind"
+  ],
+  "features": {    
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "version": "latest",
+      "dockerDashComposeVersion": "v2"
+    },
+    "ghcr.io/jpawlowski/devcontainer-features/cascadia-code:1": {
+      "installFontconfig": true,
+      "installStaticTTF": true,
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/git:1": {
+      "ppa": true,
+      "version": "os-provided"
+    },
+    "ghcr.io/devcontainers/features/java:1": {
+      "installGradle": true,
+      "installMaven": true,
+      "installAnt": false,
+      "installGroovy": false,
+      "version": "21",
+      "jdkDistro": "ms",
+      "gradleVersion": "8.14.2",
+      "mavenVersion": "3.9.10"
+    }
+  },
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  // "forwardPorts": [],
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "java -version",
+
+  // Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "[yaml]": {
+          "editor.defaultFormatter": "redhat.vscode-yaml"
+        },
+        "[yml]": {
+          "editor.defaultFormatter": "redhat.vscode-yaml"
+        },
+        "[azure-pipelines]": {
+          "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "explicit",
+            "source.fixAll.stylelint": "explicit",
+            "source.fixAll.tslint": "explicit"
+          },
+          "editor.defaultFormatter": "redhat.vscode-yaml",
+          "editor.formatOnPaste": true,
+          "editor.formatOnSave": true
+        },
+        "azure-pipelines.customSchemaFile": "./ci/support/yamlschema.json",
+        "editor.fontFamily": "'Cascadia Code SemiLight', Consolas, 'Courier New', monospace",
+        "editor.fontLigatures": true,
+        "editor.renderWhitespace": "all",
+        "editor.rulers": [
+          100,
+          160,
+          200
+        ],
+        "editor.wordWrap": "wordWrapColumn",
+        "editor.wordWrapColumn": 160,
+        "files.associations": {
+          "**/ci/*.yml": "azure-pipelines",
+          "**/ci/**/*.yml": "azure-pipelines"
+        },
+        "files.exclude": {
+          "**/.classpath": true,
+          "**/.factorypath": true,
+          "**/.project": true,
+          "**/.settings": true
+        },
+        "git.mergeEditor": true,
+        "java.compile.nullAnalysis.mode": "automatic",
+        "java.configuration.updateBuildConfiguration": "interactive",
+        "java.format.settings.url": ".vscode/java-formatter.xml",
+        "java.saveActions.organizeImports": true,
+        "telemetry.telemetryLevel": "off",
+        "workbench.colorTheme": "Eclipse Dark",
+        "workbench.iconTheme": "vscode-icons"
+      },
+      // Add the IDs of extensions you want installed when the container is created.
+      "extensions": [
+        "ahmadalli.vscode-nginx-conf",
+        "alphabotsec.vscode-eclipse-keybindings",
+        "dbaeumer.vscode-eslint",
+        "docker.docker",
+        "donjayamanne.githistory",
+        "github.copilot",
+        "github.copilot-chat",
+        "github.vscode-github-actions",
+        "github.vscode-pull-request-github",
+        "guodongsun.vscode-git-cruise",
+        "henrynguyen5-vsc.vsc-nvm",
+        "humao.rest-client",
+        "janisdd.vscode-edit-csv",
+        "johnpapa.vscode-peacock",
+        "mechatroner.rainbow-csv",
+        "mhutchie.git-graph",
+        "ms-azure-devops.azure-pipelines",
+        // "ms-azuretools.vscode-containers",
+        "ms-azuretools.vscode-docker",
+        "oderwat.indent-rainbow",
+        "redhat.fabric8-analytics",
+        "redhat.java",
+        "redhat.vscode-community-server-connector",
+        "redhat.vscode-rsp-ui",
+        "redhat.vscode-xml",
+        "redhat.vscode-yaml",
+        "sandipchitale.docker-dive",
+        "shengchen.vscode-checkstyle",
+        "timonwong.shellcheck",
+        "visualstudioexptteam.intellicode-api-usage-examples",
+        "visualstudioexptteam.vscodeintellicode",
+        "visualstudioexptteam.vscodeintellicode-completions",
+        "vmware.vscode-boot-dev-pack",
+        "vmware.vscode-spring-boot",
+        "voidrot.liquibase",
+        "vscjava.vscode-gradle",
+        "vscjava.vscode-java-debug",
+        "vscjava.vscode-java-dependency",
+        "vscjava.vscode-java-pack",
+        "vscjava.vscode-java-test",
+        "vscjava.vscode-lombok",
+        "vscjava.vscode-maven",
+        "vscjava.vscode-spring-boot-dashboard",
+        "vscjava.vscode-spring-initializr",
+        "vscode-icons-team.vscode-icons",
+        "waderyan.gitblame",
+        "yummygum.city-lights-icon-vsc",
+        "zerodind.familiar-java-themes",
+        "dracula-theme.theme-dracula"
+      ]
+    }
+  },
+  "postCreateCommand": "/opt/devcontainer/init/postCreateCommand.sh",
+  "updateContentCommand": "/opt/devcontainer/init/updateContentCommand.sh",
+  "postStartCommand": "/opt/devcontainer/init/postStartCommand.sh",
+  "postAttachCommand": "/opt/devcontainer/init/postAttachCommand.sh",
+  "postStopCommand": "/opt/devcontainer/init/postStopCommand.sh",
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  "remoteUser": "vscode"
+}
