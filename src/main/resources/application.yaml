@@ -18,13 +18,17 @@ spring:
 #JPA config
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
-    ## create update database schema on boot
-    # hibernate:
-      # ddl-auto: validate
+    ## VALIDATE database schema on boot
+    hibernate:
+      ddl-auto: validate
 
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/master.changelog.yaml
+
+application:
+  campaing-http-service:
+    uri: http://localhost:8080
 
 server:
   port: 8080
