@@ -28,7 +28,7 @@ public class Matcher {
 
     /**
      * Embedded objects to reduce the number of tables and joins to be done.
-     * A Matcher has no sense without Level, Has and DoesNotHave and vice versa.
+     * Level, Has and DoesNotHave do not have any kind of sense without a Matcher
      */
     @Embedded
     private Level level;
