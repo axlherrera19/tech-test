@@ -12,6 +12,7 @@ databaseChangeLog:
                 tableName: campaign
 
         - insert:
+            ## Matcher that matches with Player Profile
             tableName: matcher
             columns:
               - column:
@@ -34,6 +35,7 @@ databaseChangeLog:
                   value: "item_4"
         
         - insert:
+            ## Matcher that DOES NOT MATCH with Player Profile
             tableName: matcher
             columns:
               - column:
@@ -56,6 +58,7 @@ databaseChangeLog:
                   value: "item_55"
             
         - insert:
+            ## Matcher that DOES NOT MATCH with Player Profile
             tableName: matcher
             columns:
               - column:
@@ -79,6 +82,7 @@ databaseChangeLog:
 
         # Now, insert the Campaign data, linking it to the Matcher
         - insert:
+            ## Campaign with a Matcher that matches with Player Profile
             tableName: campaign
             columns:
               - column:
@@ -108,7 +112,9 @@ databaseChangeLog:
               - column:
                   name: last_updated
                   value: "2021-07-13T11:46:58Z"
+        
         - insert:
+            ## Campaign with a Matcher that DOES NOT match with Player Profile
             tableName: campaign
             columns:
               - column:
@@ -119,7 +125,7 @@ databaseChangeLog:
                   value: "mygame2"
               - column:
                   name: name
-                  value: "mycampaign2"
+                  value: "campaign_does_not_match_2"
               - column:
                   name: priority
                   valueNumeric: 10.5
@@ -141,6 +147,7 @@ databaseChangeLog:
 
         - insert:
             tableName: campaign
+            ## Campaign with a Matcher that DOES NOT match with Player Profile
             columns:
               - column:
                   name: id
@@ -150,7 +157,7 @@ databaseChangeLog:
                   value: "mygame3"
               - column:
                   name: name
-                  value: "mycampaign3"
+                  value: "campaign_does_not_match_3"
               - column:
                   name: priority
                   valueNumeric: 10.5
@@ -216,10 +223,10 @@ databaseChangeLog:
                   value: "2021-01-23 13:37:17Z"
               - column:
                   name: total_spent
-                  value: 400.0 # Use decimal for double
+                  value: 400.0
               - column:
                   name: total_refund
-                  value: 0.0 # Use decimal for double
+                  value: 0.0
               - column:
                   name: total_transactions
                   value: 5
