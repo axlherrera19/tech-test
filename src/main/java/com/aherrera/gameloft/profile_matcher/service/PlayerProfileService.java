@@ -86,81 +86,124 @@ public class PlayerProfileService {
      * @return true if the current campaing must be assigned to the user profile.
      *         False if not.
      */
-    private boolean mustAssignCampaign(Campaign runningCampaign, PlayerProfile playerProfile) {
+    boolean mustAssignCampaign(Campaign runningCampaign, PlayerProfile playerProfile) {
         boolean levelMatches = false;
         boolean hasCountryMatches = false;
         boolean hasItemsMatches = false;
         boolean doesNotHaveItemsMatches = false;
 
-        if (runningCampaign.getMatchers() != null) {
-            // 1. Check Level
-            if (runningCampaign.getMatchers().getLevel() != null
-                    && runningCampaign.getMatchers().getLevel().getMin() != null
-                    && runningCampaign.getMatchers().getLevel().getMax() != null) {
-                if (playerProfile.getLevel() <= runningCampaign.getMatchers().getLevel().getMax()
-                        && playerProfile.getLevel() >= runningCampaign.getMatchers().getLevel().getMin()) {
-                    // Level of player is smaller than Campaign MAX Level and bigger than Campaing
-                    // MIN level --> Level is in range
-                    levelMatches = true;
+        if (playerProfile != null && runningCampaign != null) {
+            if (runningCampaign.getMatchers() != null) {
+                // 1. Check Level
+                if (runningCampaign.getMatchers().getLevel() != null
+                        && runningCampaign.getMatchers().getLevel().getMin() != null
+                        && runningCampaign.getMatchers().getLevel().getMax() != null) {
+                    if (playerProfile.getLevel() <= runningCampaign.getMatchers().getLevel().getMax()
+                            && playerProfile.getLevel() >= runningCampaign.getMatchers().getLevel().getMin()) {
+                        // Level of player is smaller than Campaign MAX Level and bigger than Campaing
+                        // MIN level --> Level is in range
+                        levelMatches = true;
+                    }
+
                 }
 
-            }
+                // 2. Check Has Matchers;
+                if (runningCampaign.getMatchers().getHas() != null) {
+                    // 2.1. Check HAS countries
+                    if (runningCampaign.getMatchers().getHas().getCountry() != null
+                            && !runningCampaign.getMatchers().getHas().getCountry().isEmpty() && runningCampaign
+                                    .getMatchers().getHas().getCountry().contains(playerProfile.getCountry())) {
+                        // Country ok
+                        hasCountryMatches = true;
+                    } else {
+                        if (runningCampaign.getMatchers().getHas().getCountry() == null
+                                || runningCampaign.getMatchers().getHas().getCountry().isEmpty()) {
+                            // If HAS list of Countries is empty, by definition, it matches the
+                            // requirement, so return true
+                            hasCountryMatches = true;
+                        }
+                    }
 
-            // 2. Check Has Matchers;
-            if (runningCampaign.getMatchers().getHas() != null) {
-                // 2.1. Check HAS countries
-                if (runningCampaign.getMatchers().getHas().getCountry() != null
-                        && !runningCampaign.getMatchers().getHas().getCountry().isEmpty() && runningCampaign
-                                .getMatchers().getHas().getCountry().contains(playerProfile.getCountry())) {
-                    // Country ok
+                    // 2.2. Check HAS Items
+                    if (runningCampaign.getMatchers().getHas().getItems() != null
+                            && !runningCampaign.getMatchers().getHas().getItems().isEmpty()
+                            && playerProfile.getInventory() != null) {
+                        hasItemsMatches = checkInventoryItems(runningCampaign.getMatchers().getHas().getItems(),
+                                playerProfile.getInventory());
+
+                    } else {
+                        if (runningCampaign.getMatchers().getHas().getItems() == null
+                                || runningCampaign.getMatchers().getHas().getItems().isEmpty()) {
+                            // If HAS list of items is empty, by definition, it matches the
+                            // requirement, so return true
+                            hasItemsMatches = true;
+                        }
+                    }
+                } else {
+                    // HAS Matchers are null --> nothing to validate --> assign the campaign
                     hasCountryMatches = true;
+                    hasItemsMatches = true;
                 }
-
-                // 2.2. Check HAS Items
-                if (runningCampaign.getMatchers().getHas().getItems() != null
-                        && !runningCampaign.getMatchers().getHas().getItems().isEmpty()
+                // 3. Check DOES NOT HAVE Items
+                if (runningCampaign.getMatchers().getDoesNotHave() != null
+                        && runningCampaign.getMatchers().getDoesNotHave().getItems() != null
+                        && !runningCampaign.getMatchers().getDoesNotHave().getItems().isEmpty()
                         && playerProfile.getInventory() != null) {
-                    hasItemsMatches = checkInventoryItems(runningCampaign.getMatchers().getHas().getItems(),
+                    // Important. checkInventoryItems checks if inventory items are inside provided
+                    // list of items, as we are checking here that the item in inventory MUST NOT BE
+                    // on getDoesNotHave().getItems(), we have to ne
+                    doesNotHaveItemsMatches = !checkInventoryItems(
+                            runningCampaign.getMatchers().getDoesNotHave().getItems(),
                             playerProfile.getInventory());
-
+                } else {
+                    if (runningCampaign.getMatchers().getDoesNotHave() == null
+                            || runningCampaign.getMatchers().getDoesNotHave().getItems() == null ||
+                            runningCampaign.getMatchers().getDoesNotHave().getItems().isEmpty()) {
+                        // If Does Not HAve list of items is empty, by definition, it matches the
+                        // requirement, so return true
+                        doesNotHaveItemsMatches = true;
+                    }
                 }
+            } else {
+                // no matchers defined --> I assume the campaign can be assigned to any user
+                levelMatches = true;
+                hasCountryMatches = true;
+                hasItemsMatches = true;
+                doesNotHaveItemsMatches = true;
             }
-            // 3. Check DOES NOT HAVE Items
-            if (runningCampaign.getMatchers().getDoesNotHave() != null
-                    && runningCampaign.getMatchers().getDoesNotHave().getItems() != null
-                    && !runningCampaign.getMatchers().getDoesNotHave().getItems().isEmpty()
-                    && playerProfile.getInventory() != null) {
-                        //Important. checkInventoryItems checks if inventory items are inside provided list of items, as we are checking here that the item in inventory MUST NOT BE on getDoesNotHave().getItems(), we have to ne
-                doesNotHaveItemsMatches = !checkInventoryItems(runningCampaign.getMatchers().getDoesNotHave().getItems(),
-                        playerProfile.getInventory());
-            }
-
         }
+
         // ALL requirments are met. Then, I consider the campaign must be assigned to
         // the player profile
         return levelMatches && hasCountryMatches && hasItemsMatches && doesNotHaveItemsMatches;
     }
 
-   /**
-    * Check if an required item for the campaign is included or not in the Player inventory
-    * @param campaignItems
-    * @param playerInventory
-    * @return true if at least on of the items in the campaign is in inventory. False if not found
-    */
-    private boolean checkInventoryItems(List<String> campaignItems, Map<String, Integer> playerInventory) {
+    /**
+     * Check if an required item for the campaign is included or not in the Player
+     * inventory
+     * 
+     * @param campaignItems
+     * @param playerInventory
+     * @return true if at least on of the items in the campaign is in inventory.
+     *         False if not found
+     */
+    boolean checkInventoryItems(List<String> campaignItems, Map<String, Integer> playerInventory) {
         // While, because if at least one item in inventory of player profile is
         // included as a requirement for the campaing is enough, no need to continue
         // iterating
         boolean atLeastOneFound = false;
-        Iterator<String> keysIterator = playerInventory.keySet().iterator();
-        while (!atLeastOneFound && keysIterator.hasNext()) {
-            String itemInventoryName = keysIterator.next();
-            if (campaignItems.contains(itemInventoryName)) {
-                // At least one Item In Inventory is in DOES NOT HAVE matcher --> Items ok
-                // True for exiting the loop
-                atLeastOneFound = true;
+        if (playerInventory != null && campaignItems != null) {
+            Iterator<String> keysIterator = playerInventory.keySet().iterator();
+            while (!atLeastOneFound && keysIterator.hasNext()) {
+                String itemInventoryName = keysIterator.next();
+                if (campaignItems.contains(itemInventoryName)) {
+                    // At least one Item In Inventory is in DOES NOT HAVE matcher --> Items ok
+                    // True for exiting the loop
+                    atLeastOneFound = true;
+                }
             }
         }
+
         return atLeastOneFound;
     }
 }
