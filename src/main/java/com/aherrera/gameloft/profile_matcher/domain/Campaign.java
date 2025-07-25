@@ -13,10 +13,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Entity(name = "campaign")
+@Builder
 public class Campaign implements Serializable {
 
     @Id
