@@ -90,14 +90,14 @@ databaseChangeLog:
 
   - changeSet:
       id: create-player-profile-table-1
-      author: aherrera # Replace with your name or identifier
+      author: aherrera
       changes:
         - createTable:
             tableName: player_profile
             columns:
               - column:
-                  name: player_id # Primary key, UUID in Java
-                  type: UUID # Use UUID type in Liquibase for UUIDs
+                  name: player_id
+                  type: UUID
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -105,20 +105,20 @@ databaseChangeLog:
                   name: credential
                   type: VARCHAR(255)
               - column:
-                  name: created_at # Maps from created
+                  name: created_at
                   type: TIMESTAMP
               - column:
-                  name: modified_at # Maps from modified
+                  name: modified_at
                   type: TIMESTAMP
               - column:
                   name: last_session
                   type: TIMESTAMP
               - column:
                   name: total_spent
-                  type: DOUBLE # Or DECIMAL(10, 2) for currency, as mentioned before
+                  type: DOUBLE
               - column:
                   name: total_refund
-                  type: DOUBLE # Or DECIMAL(10, 2)
+                  type: DOUBLE
               - column:
                   name: total_transactions
                   type: INT
@@ -127,7 +127,7 @@ databaseChangeLog:
                   type: TIMESTAMP
               - column:
                   name: inventory
-                  type: TEXT
+                  type: VARCHAR(1024)
                   constraints:
                     nullable: true
               - column:
@@ -141,28 +141,26 @@ databaseChangeLog:
                   type: INT
               - column:
                   name: country
-                  type: VARCHAR(2) # Assuming 2-letter country code (e.g., "CA")
+                  type: VARCHAR(2)
               - column:
                   name: language
-                  type: VARCHAR(10) # Adjust size as needed (e.g., "fr")
+                  type: VARCHAR(10)
               - column:
-                  name: birth_date # Maps from birthdate
+                  name: birth_date
                   type: TIMESTAMP
               - column:
                   name: gender
-                  type: VARCHAR(50) # "male", "female", etc.
+                  type: VARCHAR(50)
 
               - column:
-                  name: custom_field # Maps from _customfield
+                  name: custom_field
                   type: VARCHAR(255)
 
-              # clan_id column will be added as a foreign key here for the @OneToOne relationship
-              # This assumes PlayerProfile is the owning side
               - column:
                   name: clan_id
-                  type: VARCHAR(255) # Must match the type of clan.id
+                  type: BIGINT
                   constraints:
-                    nullable: true # As PlayerProfile doesn't strictly require a Clan (depending on your logic)
+                    nullable: true
 
   - changeSet:
       id: create-device-table-1
@@ -188,10 +186,10 @@ databaseChangeLog:
                   name: firmware
                   type: VARCHAR(255)
               - column:
-                  name: player_id # Foreign key to player_profile table
-                  type: UUID # Must match type of player_profile.player_id
+                  name: player_id
+                  type: UUID
                   constraints:
-                    nullable: false # Assuming a device must always belong to a player
+                    nullable: false
 
         # Add foreign key constraint from device to player_profile
         - addForeignKeyConstraint:
@@ -200,18 +198,18 @@ databaseChangeLog:
             referencedTableName: player_profile
             referencedColumnNames: player_id
             constraintName: fk_device_player_profile
-            onDelete: CASCADE # If a player is deleted, their devices are deleted.
+            onDelete: CASCADE
 
   - changeSet:
       id: create-clan-table-1
       author: aherrera
       changes:
         - createTable:
-            tableName: clan # Table for the Clan entity
+            tableName: clan
             columns:
               - column:
-                  name: id # Clan ID from JSON, treated as String
-                  type: VARCHAR(255)
+                  name: id
+                  type: BIGINT
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -220,30 +218,6 @@ databaseChangeLog:
                   type: VARCHAR(255)
                   constraints:
                     nullable: false
-
-  # Add foreign key for activeCampaigns in the existing 'campaign' table
-  # This changeSet should be placed logically where it makes sense,
-  # potentially in the '00-create-schema.yaml' where campaign table is created,
-  # or here if the campaign table already exists.
-  - changeSet:
-      id: add-fk-campaign-player-profile-1
-      author: aherrera
-      changes:
-        - addColumn: # Add the foreign key column to the existing campaign table
-            tableName: campaign
-            columns:
-              - column:
-                  name: player_profile_id # Name of the column as per @JoinColumn
-                  type: UUID # Must match type of player_profile.player_id
-                  constraints:
-                    nullable: true # Assuming campaigns don't always need a player profile
-        - addForeignKeyConstraint:
-            baseTableName: campaign
-            baseColumnNames: player_profile_id
-            referencedTableName: player_profile
-            referencedColumnNames: player_id
-            constraintName: fk_campaign_player_profile
-            onDelete: SET NULL # If a player profile is deleted, player_profile_id in campaign becomes NULL.
 
   # Add foreign key constraint from player_profile to clan
   - changeSet:
@@ -254,7 +228,6 @@ databaseChangeLog:
             baseTableName: player_profile
             baseColumnNames: clan_id
             referencedTableName: clan
-            referencedColumnNames: id # PK of the Clan table
+            referencedColumnNames: id
             constraintName: fk_player_profile_clan
             onDelete: SET NULL # If clan is deleted, player's clan_id becomes NULL
-            # Or RESTRICT/NO ACTION if a player cannot exist without a clan.

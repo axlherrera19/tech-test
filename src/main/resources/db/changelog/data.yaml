@@ -32,6 +32,50 @@ databaseChangeLog:
               - column:
                   name: does_not_have_items
                   value: "item_4"
+        
+        - insert:
+            tableName: matcher
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 2
+              - column:
+                  name: min
+                  value: 1
+              - column:
+                  name: max
+                  value: 2
+              - column:
+                  name: country
+                  value: "US,RO"
+              - column:
+                  name: has_items
+                  value: "item_1"
+              - column:
+                  name: does_not_have_items
+                  value: "item_55"
+            
+        - insert:
+            tableName: matcher
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 3
+              - column:
+                  name: min
+                  value: 1
+              - column:
+                  name: max
+                  value: 8
+              - column:
+                  name: country
+                  value: "US,RO,CA"
+              - column:
+                  name: has_items
+                  value: "item_99"
+              - column:
+                  name: does_not_have_items
+                  value: "item_2"
 
         # Now, insert the Campaign data, linking it to the Matcher
         - insert:
@@ -64,6 +108,67 @@ databaseChangeLog:
               - column:
                   name: last_updated
                   value: "2021-07-13T11:46:58Z"
+        - insert:
+            tableName: campaign
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 2
+              - column:
+                  name: game
+                  value: "mygame2"
+              - column:
+                  name: name
+                  value: "mycampaign2"
+              - column:
+                  name: priority
+                  valueNumeric: 10.5
+              - column:
+                  name: matcher_id 
+                  valueNumeric: 2
+              - column:
+                  name: start_date
+                  value: "2023-01-25T00:00:00Z"
+              - column:
+                  name: end_date
+                  value: "2023-02-25T00:00:00Z"
+              - column:
+                  name: enabled
+                  valueBoolean: true
+              - column:
+                  name: last_updated
+                  value: "2021-07-13T11:46:58Z"
+
+        - insert:
+            tableName: campaign
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 3
+              - column:
+                  name: game
+                  value: "mygame3"
+              - column:
+                  name: name
+                  value: "mycampaign3"
+              - column:
+                  name: priority
+                  valueNumeric: 10.5
+              - column:
+                  name: matcher_id 
+                  valueNumeric: 3
+              - column:
+                  name: start_date
+                  value: "2023-01-25T00:00:00Z"
+              - column:
+                  name: end_date
+                  value: "2023-02-25T00:00:00Z"
+              - column:
+                  name: enabled
+                  valueBoolean: true
+              - column:
+                  name: last_updated
+                  value: "2021-07-13T11:46:58Z"
 
   - changeSet:
       id: insert-player-profile-data-1
@@ -77,9 +182,6 @@ databaseChangeLog:
                 tableName: device
             - tableExists:
                 tableName: clan
-            - columnExists:
-                tableName: campaign
-                columnName: player_profile_id
 
         - insert:
         # Insert data in Clan
