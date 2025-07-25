@@ -17,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Data
@@ -24,6 +25,7 @@ import lombok.Data;
 public class PlayerProfile implements Serializable {
 
     @Id
+    @Column(name = "player_id")
     @JsonProperty("player_id")
     private UUID playerId;
 
@@ -50,9 +52,11 @@ public class PlayerProfile implements Serializable {
     @JsonProperty("last_purchase")
     private OffsetDateTime lastPurchase;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "player_profile_id")
-    private Set<Campaign> activeCampaigns;
+    /**
+     * Based on the statement, I'm assuming that Campaigns data comes from an external API. For this reason, even though I've included the Campaign entity in the same database, I haven't created a Foreign Key (FK) relationship between PlayerProfile and Campaigns. Furthermore, the statement specifies that if a player profile is assigned to a campaign, it should be done only by assigning the campaign's name to the ActiveCampaigns list within the PlayerProfile. Therefore, it's marked as Transient to indicate that this field does not persist in the database.
+     */
+    @Transient
+    private Set<String> activeCampaigns;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "player_id")

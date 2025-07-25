@@ -61,6 +61,7 @@ public class Matcher {
         private List<String> country;
 
         @Column(name = "has_items")
+        @Convert(converter = StringToListConverter.class)
         private List<String> items;
 
     }
@@ -73,6 +74,7 @@ public class Matcher {
 
         // Avoid duplicated columns (items) in same entity
         @Column(name = "does_not_have_items")
+        @Convert(converter = StringToListConverter.class)
         private List<String> items;
     }
 }

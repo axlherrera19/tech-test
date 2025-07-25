@@ -30,7 +30,6 @@ public class Campaign implements Serializable {
 
     private Double priority;
 
-    //Not all times the campaing is needed, the matcher is required.
     @OneToOne(fetch = FetchType.LAZY)
     @PrimaryKeyJoinColumn(name = "matcher_id")
     private Matcher matchers;
