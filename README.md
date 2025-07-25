@@ -3,6 +3,7 @@
 ### Business Logic Assumptions
 - When calculating if a Player Profile is elegible for a running campaign, I assume **all** Campaing conditions must be matched, then I consider only player profiles who meet all campaign requirements **(AND logic)** must be associated to the campaign.  **If at least one condition doesn't match**, the user is not elegible for the campaign.
 - For this example, I'm matching campaigns with player profiles on the fly. I assume no database updates to the Player Profile entity are requested for this excercise. For every request to this service, running campaigns are retrieved and checked against the user profile. **If the player profile matches all requirements, the campaign is assigned only to the result entity, and the modified player profile is returned, but nothing changes in the database.**
+- I assume when a matcher contains an empty value, such as *empty has list of items* or *empty list of countries*, there is nothing to compare with so I consider the campaign can be assigned to any user indepdently of player profile data.
 
 
 
